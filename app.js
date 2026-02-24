@@ -1,6 +1,18 @@
 // Aadhaar Harm Database — Frontend
 const API = 'aadhaar_harm_cases.json';
 
+const SECTION_LABELS = {
+  'A': 'A — Starvation Deaths',
+  'B': 'B — Pension Issues',
+  'C': 'C — NREGA Wage Issues',
+  'D': 'D — Other Welfare Exclusions',
+  'E': 'E — Citizenship & ID Exclusion',
+  'F': 'F — School Enrollment & Midday Meals',
+  'G': 'G — Bedridden/Sick/Disabled Exclusion',
+  'H': 'H — Pension Life Certificate Failures',
+  'I': 'I — Aggregate & Systemic Exclusions'
+};
+
 let cases = [];
 let filtered = [];
 
@@ -27,7 +39,7 @@ function populateFilters() {
   sections.forEach(s => {
     const opt = document.createElement('option');
     opt.value = s;
-    opt.textContent = `Section ${s}`;
+    opt.textContent = SECTION_LABELS[s] || `Section ${s}`;
     sectionSel.appendChild(opt);
   });
 
@@ -41,7 +53,8 @@ function populateFilters() {
 
 function updateStats() {
   document.getElementById('total-cases').textContent = cases.length;
-  document.getElementById('total-sections').textContent = [...new Set(cases.map(c => c.section))].length;
+  const uniqueSections = [...new Set(cases.map(c => c.section).filter(Boolean))];
+  document.getElementById('total-sections').textContent = uniqueSections.length;
   const years = cases.map(c => parseInt(c.year)).filter(y => !isNaN(y));
   document.getElementById('latest-year').textContent = years.length ? Math.max(...years) : '—';
 }
@@ -52,18 +65,32 @@ function renderTable() {
 
   filtered.forEach(c => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><strong>${escapeHtml(c.id)}</strong></td>
-      <td>${escapeHtml(c.case_type || '')}</td>
-      <td>${escapeHtml(c.name || '')}</td>
-      <td>${escapeHtml(c.gender || '')}</td>
-      <td>${escapeHtml(c.age || '')}</td>
-      <td>${escapeHtml(c.location || '')}</td>
-      <td>${escapeHtml(c.year || '')}</td>
-      <td>${escapeHtml(c.details || '')}</td>
-      <td>${escapeHtml(c.outcome || '')}</td>
-      <td>${escapeHtml(c.source || '')}</td>
-    `;
+
+    const addCell = (content, isHtml = false, title = '') => {
+      const td = document.createElement('td');
+      if (title) td.title = title;
+      if (isHtml) {
+        td.innerHTML = content;
+      } else {
+        td.textContent = content;
+      }
+      tr.appendChild(td);
+    };
+
+    // ID cell: show full section label as tooltip
+    const sectionLabel = SECTION_LABELS[c.section] || `Section ${c.section}`;
+    addCell(`<strong>${c.id}</strong>`, true, sectionLabel);
+
+    addCell(c.case_type || '');
+    addCell(c.name || '');
+    addCell(c.gender || '');
+    addCell(c.age || '');
+    addCell(c.location || '');
+    addCell(c.year || '');
+    addCell(c.details || '');
+    addCell(c.outcome || '');
+    addCell(c.source || '', true); // Source may contain HTML links
+
     tbody.appendChild(tr);
   });
 }
