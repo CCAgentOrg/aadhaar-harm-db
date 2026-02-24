@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aadhaar Harm Database</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Aadhaar Harm Database</h1>
+    <p class="subtitle">Documenting harms from Aadhaar authentication failures and welfare exclusions</p>
+  </header>
+
+  <main>
+    <section class="stats" id="stats">
+      <div class="stat-card">
+        <span class="stat-value" id="total-cases">0</span>
+        <span class="stat-label">Total Cases</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value" id="total-sections">0</span>
+        <span class="stat-label">Sections</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value" id="latest-year">—</span>
+        <span class="stat-label">Latest Year</span>
+      </div>
+    </section>
+
+    <section class="filters">
+      <input type="text" id="search" placeholder="Search cases (name, location, details...)" autofocus>
+      <select id="section-filter">
+        <option value="">All Sections</option>
+      </select>
+      <select id="type-filter">
+        <option value="">All Types</option>
+      </select>
+    </section>
+
+    <section class="table-container">
+      <table id="cases-table">
+        <thead>
+          <tr>
+            <th data-sort="id">ID</th>
+            <th data-sort="case_type">Type</th>
+            <th data-sort="name">Name</th>
+            <th data-sort="gender">Gender</th>
+            <th data-sort="age">Age</th>
+            <th data-sort="location">Location</th>
+            <th data-sort="year">Year</th>
+            <th>Details</th>
+            <th>Outcome</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody id="cases-body"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>Data under <a href="https://opendatacommons.org/licenses/odbl/">ODbL v1.0</a> • Maintained by <a href="https://cashlessconsumer.org">CashlessConsumer</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
